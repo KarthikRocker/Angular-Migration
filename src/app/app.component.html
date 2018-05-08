@@ -1,0 +1,21 @@
+<!--The content below is only a placeholder and can be replaced.-->
+<div style="text-align:center">
+  <h1>
+    {{ title }}
+  </h1>
+</div>
+<div>
+  <!-- <label>European Currency Field 1: </label>
+  <input type="number" [(ngModel)]='amount' (blur)="transformAmount($event)" [(value)]="formattedAmount" /> -->
+
+  <div>
+    <label>European Currency Field: </label>
+    <input [(ngModel)]="amount" [ngModelOptions]="{updateOn: 'blur'}" [appMyCurrencyFormatter]=13 />
+  </div>
+
+  <!-- <app-my-currency-input-control [(amount)]="amount"></app-my-currency-input-control> -->
+  <div>
+    <label>Amount => </label> {{amount}}
+  </div>
+  <!-- <div>{{amount | currency:' ':'symbol':'4.2-2':'fr'}}</div> -->
+</div>

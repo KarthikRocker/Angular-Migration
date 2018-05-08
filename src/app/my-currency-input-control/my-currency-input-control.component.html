@@ -1,0 +1,3 @@
+<input [(ngModel)]="amountText" [ngModelOptions]="{updateOn: 'blur'}"
+(focus)="onFocus($event)" (change)="onChange($event)" (blur)="onBlur($event)"
+[appOnlyNumber]=13 />
