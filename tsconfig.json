@@ -1,4 +1,4 @@
-{
+﻿{
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",
@@ -17,4 +17,4 @@
       "dom"
     ]
   }
-}
+} 

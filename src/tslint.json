@@ -1,4 +1,4 @@
-{
+﻿{
     "extends": "../tslint.json",
     "rules": {
         "directive-selector": [
@@ -14,4 +14,4 @@
             "kebab-case"
         ]
     }
-}
+} 
