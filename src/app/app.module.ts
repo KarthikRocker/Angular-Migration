@@ -7,19 +7,17 @@ registerLocaleData(localeFr);
 
 import { AppComponent } from './app.component';
 import { registerLocaleData } from '@angular/common';
-import { MyCurrencyFormatterDirective } from './currencyFormatter.directive';
-import { MyCurrencyInputControlModule } from './my-currency-input-control/my-currency-input-control.module';
+import { CurrencyFormatterDirective } from './currencyFormatter.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MyCurrencyFormatterDirective
+    CurrencyFormatterDirective
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    CommonModule,
-    MyCurrencyInputControlModule
+    CommonModule
   ],
   bootstrap: [AppComponent]
 })
