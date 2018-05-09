@@ -1,7 +1,11 @@
-import { Directive, HostListener, ElementRef, OnInit, Input } from "@angular/core";
-import { CurrencyPipe } from '@angular/common';
+import { Directive, HostListener, ElementRef, Input, OnInit } from "@angular/core";
+import localeFr from '@angular/common/locales/fr';
+import { registerLocaleData, CurrencyPipe, DecimalPipe } from '@angular/common';
 import { NgModel } from '@angular/forms';
 import { isNullOrUndefined } from "util";
+
+// register french locale in the app for decimalPipe conversion
+registerLocaleData(localeFr);
 
 const PADDING: string = "000000";
 const DEFAULT_FRACTION_VALUE: string = "00";
@@ -14,25 +18,28 @@ const MAX_PRECISION: number = 2;
 
 @Directive({
   selector: "[ngModel][appCurrencyFormatter]",
-  providers: [NgModel, CurrencyPipe]
+  providers: [NgModel, CurrencyPipe, DecimalPipe],
+  host: {
+    '(ngModelChange)': 'onModelChange($event)'
+  }
 })
 export class CurrencyFormatterDirective implements OnInit {
-
   private element: HTMLInputElement;
-  constructor(public model: NgModel, private elementRef: ElementRef, private currencyPipe: CurrencyPipe) {
+  constructor(public model: NgModel, private elementRef: ElementRef, private currencyPipe: CurrencyPipe, private decimalPipe: DecimalPipe) {
     this.element = this.elementRef.nativeElement;
   }
 
-  ngOnInit() {
-    if (this.model.value === 0) {
-      this.model.valueAccessor.writeValue(DEFAULT_VALUE);
+  ngOnInit(): void {
+    if(this.model.model === 0 || this.model.value === 0) {
+      setTimeout(()=>{
+        this.model.valueAccessor.writeValue(DEFAULT_VALUE);
+      });
     }
   }
 
   @Input("appCurrencyFormatter")
   maxLength: number;
 
-  //#region HostListners
   @HostListener("focus", ["$event"])
   onFocus(event) {
     this.model.valueAccessor.writeValue(this.parse(event.target.value)); // opposite of transform
@@ -40,7 +47,7 @@ export class CurrencyFormatterDirective implements OnInit {
 
   @HostListener("blur", ["$event"])
   onBlur(event) {
-    this.model.viewToModelUpdate(parseFloat(this.parse(event.target.value).replace(COMMA, DOT).replace(/\s/g, "")));
+    this.model.viewToModelUpdate(parseFloat(this.parse(event.target.value).replace(COMMA, DOT).replace(/\s/g, EMPTY_STRING)));
     this.model.valueAccessor.writeValue(this.transform(event.target.value));
   }
 
@@ -98,26 +105,30 @@ export class CurrencyFormatterDirective implements OnInit {
       e.preventDefault();
     }
   }
-  //#endregion
 
   private isCursorInFractionalSection(event): boolean {
     return event.target.value.indexOf(COMMA) !== -1 && event.target.selectionStart > event.target.value.indexOf(COMMA);
   }
 
+  /**
+   * 
+   * @param value It will be a number. Example: 99999999.99
+   * @param fractionSize Default precision is 2
+   * @returns The reutrn value will be a string. Example: 99999999.99 => 99 999 999,99
+   */
   private transform(value: number | string, fractionSize: number = MAX_PRECISION): string {
     var validValue = value.toString().replace(COMMA, DOT).replace(/\s/g, EMPTY_STRING).trim();
-    return isNullOrUndefined(validValue) || validValue == EMPTY_STRING || validValue == DOT ? DEFAULT_VALUE : this.currencyPipe.transform(parseFloat(validValue), ' ', 'symbol', '1.2-2', 'fr').trim();
+    //return isNullOrUndefined(validValue) || validValue == EMPTY_STRING || validValue == DOT ? DEFAULT_VALUE : this.currencyPipe.transform(parseFloat(validValue), ' ', 'symbol', '1.2-2', 'fr').trim();
+    return isNullOrUndefined(validValue) || validValue == EMPTY_STRING || validValue == DOT ? DEFAULT_VALUE : this.decimalPipe.transform(validValue, '1.2-2', 'fr').trim();
   }
 
+  /**
+   * 
+   * @param value It will be a string. Example: 9 999 999 999,999
+   * @param fractionSize Default precision is 2
+   * @returns The return value will be a fractional number. Example: 9 999 999 999.9999 => 10000000000.00
+   */
   private parse(value: string, fractionSize: number = MAX_PRECISION): string {
-    let [integer, fraction = EMPTY_STRING] = (value || EMPTY_STRING).split(COMMA);
-
-    integer = integer.replace(new RegExp(THOUSANDS_SEPARATOR, "g"), EMPTY_STRING);
-    integer = integer == EMPTY_STRING ? "0" : integer;
-    fraction = parseInt(fraction, 10) > 0 && fractionSize > 0
-      ? COMMA + (fraction + PADDING).substring(0, fractionSize)
-      : COMMA + DEFAULT_FRACTION_VALUE;
-
-    return (integer + fraction).replace(/\s/g, EMPTY_STRING);
+    return this.decimalPipe.transform(value.replace(COMMA, DOT).replace(/\s/g, EMPTY_STRING), '1.2-2', 'fr').replace(/\s/g, EMPTY_STRING).trim();
   }
 }
