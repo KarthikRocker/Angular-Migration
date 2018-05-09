@@ -106,6 +106,10 @@ export class CurrencyFormatterDirective implements OnInit {
     }
   }
 
+  /**
+   * This method is used to verify the cursor is placed in fractional part.
+   * @param event 
+   */
   private isCursorInFractionalSection(event): boolean {
     return event.target.value.indexOf(COMMA) !== -1 && event.target.selectionStart > event.target.value.indexOf(COMMA);
   }
