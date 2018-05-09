@@ -18,10 +18,7 @@ const MAX_PRECISION: number = 2;
 
 @Directive({
   selector: "[ngModel][appCurrencyFormatter]",
-  providers: [NgModel, CurrencyPipe, DecimalPipe],
-  host: {
-    '(ngModelChange)': 'onModelChange($event)'
-  }
+  providers: [NgModel, CurrencyPipe, DecimalPipe]
 })
 export class CurrencyFormatterDirective implements OnInit {
   private element: HTMLInputElement;
@@ -30,8 +27,8 @@ export class CurrencyFormatterDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.model.model === 0 || this.model.value === 0) {
-      setTimeout(()=>{
+    if (this.model.model === 0 || this.model.value === 0) {
+      setTimeout(() => {
         this.model.valueAccessor.writeValue(DEFAULT_VALUE);
       });
     }
@@ -122,8 +119,8 @@ export class CurrencyFormatterDirective implements OnInit {
    */
   private transform(value: number | string, fractionSize: number = MAX_PRECISION): string {
     var validValue = value.toString().replace(COMMA, DOT).replace(/\s/g, EMPTY_STRING).trim();
-    //return isNullOrUndefined(validValue) || validValue == EMPTY_STRING || validValue == DOT ? DEFAULT_VALUE : this.currencyPipe.transform(parseFloat(validValue), ' ', 'symbol', '1.2-2', 'fr').trim();
-    return isNullOrUndefined(validValue) || validValue == EMPTY_STRING || validValue == DOT ? DEFAULT_VALUE : this.decimalPipe.transform(validValue, '1.2-2', 'fr').trim();
+    return isNullOrUndefined(validValue) || validValue == EMPTY_STRING || validValue == DOT ? DEFAULT_VALUE :
+      this.decimalPipe.transform(validValue, '1.2-2', 'fr').trim();
   }
 
   /**
@@ -133,6 +130,8 @@ export class CurrencyFormatterDirective implements OnInit {
    * @returns The return value will be a fractional number. Example: 9 999 999 999.9999 => 10000000000.00
    */
   private parse(value: string, fractionSize: number = MAX_PRECISION): string {
-    return this.decimalPipe.transform(value.replace(COMMA, DOT).replace(/\s/g, EMPTY_STRING), '1.2-2', 'fr').replace(/\s/g, EMPTY_STRING).trim();
+    var validValue = value.toString().replace(COMMA, DOT).replace(/\s/g, EMPTY_STRING).trim();
+    return isNullOrUndefined(validValue) || validValue == EMPTY_STRING || validValue == DOT ? DEFAULT_VALUE :
+      this.decimalPipe.transform(validValue, '1.2-2', 'fr').replace(/\s/g, EMPTY_STRING).trim();
   }
 }
