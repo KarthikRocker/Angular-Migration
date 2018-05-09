@@ -27,6 +27,9 @@ export class CurrencyFormatterDirective implements OnInit {
   }
 
   ngOnInit(): void {
+    // TODO: bring it from config
+    this.element.style.textAlign = "right";
+    
     if (this.model.model === 0 || this.model.value === 0) {
       setTimeout(() => {
         this.model.valueAccessor.writeValue(DEFAULT_VALUE);
