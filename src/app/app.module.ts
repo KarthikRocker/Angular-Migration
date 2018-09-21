@@ -1,22 +1,24 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
-import { CommonModule, CurrencyPipe } from '@angular/common';
-import { CurrencyMaskModule } from 'ng2-currency-mask';
-
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 import { AppComponent } from './app.component';
-import { CurrencyFormatterDirective } from './currencyFormatter.directive';
+import { CountryService } from './country.service';
+import { HttpClientModule } from '@angular/common/http';
+import { AutoCompleteModule } from 'primeng/autocomplete';
+
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CurrencyFormatterDirective
+    AppComponent
   ],
   imports: [
-    BrowserModule,
-    FormsModule,
-    CommonModule,
-    CurrencyMaskModule
+    BrowserModule, BrowserAnimationsModule, FormsModule, HttpClientModule, AutoCompleteModule
+  ],
+  providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
+    CountryService
   ],
   bootstrap: [AppComponent]
 })

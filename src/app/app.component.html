@@ -1,16 +1,9 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
-  <h1>
+  <h2>
     {{ title }}
-  </h1>
+  </h2>
 </div>
-<div>
-  <div>
-    <label>European Currency Field: </label>
-    <input [(ngModel)]="amount" [ngModelOptions]="{updateOn: 'blur'}" [appCurrencyFormatter]=13 />
-  </div>
-  <div>
-    <label>Amount => </label> {{amount}}
-  </div>
-  <input currencyMask [(ngModel)]="amount" [options]="{ prefix: '', thousands: ' ', decimal: ',' }"/>
-</div>
+<p-autoComplete [(ngModel)]="country" forceSelection="true" autoHighlight="true" [suggestions]="filteredCountriesSingle"
+ (completeMethod)="filterCountrySingle($event)" field="name" [size]="30" placeholder="Countries" [minLength]="1"></p-autoComplete>
+<span style="margin-left:10px">Country: {{country ? country.name||country : 'none'}}</span>

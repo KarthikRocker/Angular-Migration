@@ -26,12 +26,19 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "/assets"
+              },
+              {
+                "glob": "countries.json",
+                "input": "src/app",
+                "output": "/"
               }
             ],
             "styles": [
               {
                 "input": "src/styles.css"
-              }
+              },
+              "node_modules/primeng/resources/themes/rocket/theme.css",
+              "node_modules/primeng/resources/primeng.min.css"
             ],
             "scripts": []
           },
