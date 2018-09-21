@@ -3,7 +3,15 @@
   <h2>
     {{ title }}
   </h2>
+  <p>
+    <i>Angular Version: 6.0.0</i> <br />
+    <i>PrimeNG Version: 5.2.6</i>
+  </p>
 </div>
-<p-autoComplete [(ngModel)]="country" forceSelection="true" autoHighlight="true" [suggestions]="filteredCountriesSingle"
- (completeMethod)="filterCountrySingle($event)" field="name" [size]="30" placeholder="Countries" [minLength]="1"></p-autoComplete>
-<span style="margin-left:10px">Country: {{country ? country.name||country : 'none'}}</span>
+<fieldset>
+  <legend>PrimeNG AutoComplete</legend>
+  <label>Country: </label>
+  <p-autoComplete [(ngModel)]="country" forceSelection="true" autoHighlight="true" [suggestions]="filteredCountriesSingle"
+    (completeMethod)="filterCountrySingle($event)" field="name" [size]="30" placeholder="Countries" [minLength]="1"></p-autoComplete>
+  <span style="margin-left:10px">Selected Country: {{country ? country.name||country : 'none'}}</span>
+</fieldset>
